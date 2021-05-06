@@ -20,6 +20,42 @@
 #define LLENO 1
 #define VACIO 0
 
+int info_imprimirArrayClienteUnico(ClienteUnico *arrayCliente, int longitud)
+{
+	int retorno = -1;
+	int verifyIsEmpty=0;
+	if(arrayCliente!=NULL && longitud>0)
+	{
+		retorno=0;
+		for(int i=0;i<longitud;i++)
+		{
+			if(arrayCliente[i].isEmpty==LLENO)
+			{
+				verifyIsEmpty=verifyIsEmpty+1;
+				info_imprimirClienteUnico(&arrayCliente[i]);
+			}
+		}
+	}
+	if(verifyIsEmpty==0)
+		printf("No hay clientes cargados.\n");
+	return retorno;
+}
+
+int info_imprimirClienteUnico(ClienteUnico *arrayCliente)
+{
+	int retorno = -1;
+
+	if(arrayCliente!=NULL)
+	{
+		retorno=0;
+
+		printf("Cuit: %s\tID: %d\tImportesPagos: %d\n",arrayCliente->cuit,arrayCliente->idCliente,arrayCliente->importesPagos);
+		printf("------------------------------------------\n");
+	}
+
+	return retorno;
+}
+
 int info_bajaCliente(Venta *arrayVentas,Cliente *arrayClientes, int *idCliente, int *idVentas)
 {
 	int retorno = -1;
@@ -142,6 +178,21 @@ int info_inicializarArrayVentasPorColor(VentasColor *arrayVentasPorColor)
 		{
 			arrayVentasPorColor[i].isEmpty=VACIO;
 			arrayVentasPorColor[i].cantidadColor=1;
+		}
+	}
+
+	return retorno;
+}
+int info_inicializarArrayClienteUnico(ClienteUnico *arrayClientesUnicos)
+{
+	int retorno = -1;
+	if(arrayClientesUnicos!=NULL)
+	{
+		for(int i=0;i<VENTAS;i++)
+		{
+			arrayClientesUnicos[i].isEmpty=VACIO;
+			arrayClientesUnicos[i].importesPagos=0;
+
 		}
 	}
 
@@ -270,4 +321,138 @@ int info_maximoBarbijoColor(VentasColor *listaVentas)
 		printf("El color mas comprado es: %s con %d ventas\n",colorMasComprado,maximoColorBarbijo);
 	}
 	return retorno;
+}
+
+int info_dividirVentasPorEstado(Venta *arrayVentas, Cliente *arrayCliente)
+{
+	int retorno=-1;
+
+
+	if(arrayCliente!=NULL && arrayVentas!=NULL)
+	{
+		retorno = 0;
+		for(int i=0;i<CLIENTES;i++)
+		{
+			if(arrayCliente[i].isEmpty==LLENO)
+			{
+				for(int j=0;j<VENTAS;j++)
+				{
+					if(arrayCliente[i].idCliente==arrayVentas[j].idCliente)
+					{
+						if(arrayVentas[j].isEmpty==LLENO)
+						{
+							if(arrayVentas[j].estado==1)
+							{
+								arrayCliente[i].importesPagos=arrayCliente[i].importesPagos+1;
+								continue;
+							}
+							else
+							{
+								arrayCliente[i].importesPendientes=arrayCliente[i].importesPendientes+1;
+								continue;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return retorno;
+}
+
+int info_maximoComprasPagadas(Cliente *arrayCliente)
+{
+	int retorno = -1;
+	int maximoCompras;
+	char nombreDelMaximo[64];
+	if(arrayCliente!=NULL)
+	{
+		maximoCompras=arrayCliente[0].importesPagos;
+		for(int i=0;i<CLIENTES;i++)
+		{
+			if(arrayCliente[i].importesPagos>=maximoCompras)
+			{
+				maximoCompras=arrayCliente[i].importesPagos;
+				strncpy(nombreDelMaximo,arrayCliente[i].nombre,sizeof(nombreDelMaximo));
+				continue;
+			}
+		}
+		printf("El cliente %s tiene mas cantidad de compras pagas con: %d\n",nombreDelMaximo,maximoCompras);
+	}
+	return retorno;
+}
+
+
+
+int info_maximoComprasPendientes(Cliente *arrayCliente)
+{
+	int retorno = -1;
+	int maximoCompras;
+	char nombreDelMaximo[64];
+	if(arrayCliente!=NULL)
+	{
+		maximoCompras=arrayCliente[0].importesPendientes;
+		for(int i=0;i<CLIENTES;i++)
+		{
+			if(arrayCliente[i].importesPendientes>=maximoCompras)
+			{
+				maximoCompras=arrayCliente[i].importesPendientes;
+				strncpy(nombreDelMaximo,arrayCliente[i].nombre,sizeof(nombreDelMaximo));
+				continue;
+			}
+		}
+		printf("El cliente %s tiene mas cantidad de compras pendientes con: %d\n",nombreDelMaximo,maximoCompras);
+	}
+	return retorno;
+}
+
+int info_listasComprasPagoPendiente(Venta *arrayVentas, Cliente *arrayClientes)
+{
+
+	//c) Lista de compras pendientes de pago con información de la compra y del cliente.
+	int retorno=-1;
+	int indice;
+	for(int i=0;i<VENTAS;i++)
+	{
+		if(arrayVentas[i].estado==0)
+		{
+			ven_imprimir(&arrayVentas[i]);
+			indice = cli_buscarId(arrayClientes, CLIENTES,arrayVentas[i].idCliente);
+			cli_imprimir(&arrayClientes[indice]);
+
+		}
+	}
+
+	return retorno;
+}
+
+int info_clienteConMasPagadas(Cliente *arrayClientes, Venta *arrayVentas)
+{
+	int retorno = -1;
+
+	if(arrayClientes!=NULL && arrayVentas!=NULL)
+	{
+		info_dividirVentasPorEstado(arrayVentas, arrayClientes);
+		info_maximoComprasPagadas(arrayClientes);
+	}
+
+	return retorno;
+
+
+}
+
+int info_clienteConMasPendientes(Cliente *arrayClientes, Venta *arrayVentas)
+{
+	int retorno = -1;
+
+	if(arrayClientes!=NULL && arrayVentas!=NULL)
+	{
+		printf("Entre a la funcion\n");
+		info_dividirVentasPorEstado(arrayVentas, arrayClientes);
+		info_maximoComprasPendientes(arrayClientes);
+	}
+
+	return retorno;
+
+
 }

@@ -35,6 +35,7 @@ int ven_inizializarArray(Venta *arrayVentas, int longitud)
 		for(int i=0;i<longitud;i++)
 		{
 			arrayVentas[i].isEmpty=VACIO;
+			arrayVentas[i].estado=2;
 		}
 	}
 	return retorno;
@@ -76,9 +77,9 @@ int ven_imprimir(Venta *arrayVentas)
 	if(arrayVentas!=NULL)
 	{
 		retorno=0;
-		printf("ID Venta: %d\n",arrayVentas->idVenta);
-		printf("Cantidad de barbijos: %d\nDireccion: %s\nColor: %s\nId De Cliente: %d\nEstado: %d\n",arrayVentas->cantidadBarbijos,arrayVentas->direccion,arrayVentas->color,arrayVentas->idCliente,arrayVentas->isEmpty);
-		printf("------------------------------------------\n");
+		printf("ID Venta: %d\t",arrayVentas->idVenta);
+		printf("Cantidad de barbijos: %d\tDireccion: %s\tColor: %s\tId De Cliente: %d\tEstado: %d\n",arrayVentas->cantidadBarbijos,arrayVentas->direccion,arrayVentas->color,arrayVentas->idCliente,arrayVentas->isEmpty);
+		printf("--------------------------------------------------------------------------------------------------------------------------------------------------\n");
 	}
 
 	return retorno;

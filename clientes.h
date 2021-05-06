@@ -15,6 +15,8 @@ typedef struct
 	char cuit[20];
 	int idCliente;
 	int isEmpty;
+	int importesPagos;
+	int importesPendientes;
 }Cliente;
 
 int cli_imprimir(Cliente *arrayCliente);

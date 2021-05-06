@@ -30,7 +30,7 @@ int cli_imprimir(Cliente *arrayCliente)
 	{
 		retorno=0;
 		printf("ID Contratacion: %d\n",arrayCliente->idCliente);
-		printf("Nombre: %s\nApellido: %s\nCuit: %s\n",arrayCliente->nombre,arrayCliente->apellido,arrayCliente->cuit);
+		printf("Nombre: %s\tApellido: %s\tCuit: %s\tImportes Pagos: %d\tImportes Pendientes: %d\n",arrayCliente->nombre,arrayCliente->apellido,arrayCliente->cuit,arrayCliente->importesPagos,arrayCliente->importesPendientes);
 		printf("------------------------------------------\n");
 	}
 
@@ -62,6 +62,7 @@ int cli_imprimirArray(Cliente *arrayCliente, int longitud)
 		printf("No hay clientes cargados.\n");
 	return retorno;
 }
+
 
 /**
  * \brief Busca un ID en un array y devuelve el indice en que se encuentra
@@ -126,6 +127,8 @@ int cli_inizializarArray(Cliente *arrayCliente, int longitud)
 		for(int i=0;i<longitud;i++)
 		{
 			arrayCliente[i].isEmpty=VACIO;
+			arrayCliente[i].importesPagos=0;
+			arrayCliente[i].importesPendientes=0;
 		}
 	}
 	return retorno;
@@ -213,6 +216,8 @@ int cli_pedirDatos(Cliente *arrayClientes, int indice, int *idCliente)
 			retorno = 0;
 			buffer_cliente.isEmpty=LLENO;
 			buffer_cliente.idCliente=*idCliente;
+			buffer_cliente.importesPagos=0;
+			buffer_cliente.importesPendientes=0;
 			(*idCliente)++;
 			arrayClientes[indice]=buffer_cliente;
 		}
